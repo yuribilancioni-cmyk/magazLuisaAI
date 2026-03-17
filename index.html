@@ -570,7 +570,7 @@ select.form-input{
           <div>⬜ Snack gatto — verificare varietà in negozio</div>
           <div>✅ Storico movimenti — abilitabile nelle impostazioni</div>
           <div>✅ Sistema lotto — schermata dedicata con prodotti inline</div>
-          <div>⬜ Foto AI (Gemini) — riconosce prodotti e scadenze da foto</div>
+          <div>⬜ Foto AI (OpenRouter) — riconosce prodotti e scadenze da foto</div>
           <div>⬜ Colonna EAN in Products — predisposta, da compilare dopo</div>
           <div>⬜ Colonna fascia in Lines — per sostituzioni stesso prezzo</div>
           <div>⬜ Multi-utente — condivisione con responsabile ufficio</div>
@@ -2413,17 +2413,18 @@ function addFotos(input){
     const reader=new FileReader();
     reader.onload=function(ev){
       // Comprimi immagine prima di mandarla
-      const img=new Image();
-      img.onload=function(){
+      const imgEl=new Image();
+      imgEl.onload=function(){
         const canvas=document.createElement('canvas');
-        const maxW=1024;const maxH=1024;
-        let w=img.width;let h=img.height;
+        const maxW=800;const maxH=800;
+        let w=imgEl.width;let h=imgEl.height;
         if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
         if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
         canvas.width=w;canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-        const compressed=canvas.toDataURL('image/jpeg',0.7);
+        canvas.getContext('2d').drawImage(imgEl,0,0,w,h);
+        const compressed=canvas.toDataURL('image/jpeg',0.5);
         const base64=compressed.split(',')[1];
+        console.log('Foto compressa:',Math.round(base64.length/1024)+'KB');
         FOTO_STATE.images.push({data:base64,mimeType:'image/jpeg',name:file.name});
         // Mostra preview
         const prev=document.getElementById('foto-preview');
@@ -2471,7 +2472,7 @@ async function analizzaFoto(){
   
   document.getElementById('btn-analizza').textContent='⏳ Analisi in corso...';
   document.getElementById('btn-analizza').disabled=true;
-  document.getElementById('foto-status').textContent='Invio foto a Gemini...';
+  document.getElementById('foto-status').textContent='Invio foto all\'AI...';
 
   // Prepara catalogo compatto
   const catalog=STATE.products.filter(p=>isActive(p)).map(function(p){
