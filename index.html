@@ -2606,17 +2606,20 @@ async function callGAS(payload){
   const gasUrl=SHEETS.gasUrl||localStorage.getItem('ps_gas')||'';
   if(!gasUrl)return{ok:false,error:'No GAS URL'};
   
-  // Per analyzePhoto usiamo fetch normale (il GAS risponde senza preflight se usiamo text/plain)
   try{
+    const body=JSON.stringify(payload);
+    console.log('Payload size:',Math.round(body.length/1024)+'KB, action:',payload.action);
     const resp=await fetch(gasUrl,{
       method:'POST',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload)
+      body:body
     });
     const text=await resp.text();
+    console.log('Response:',text.substring(0,200));
     try{return JSON.parse(text);}
-    catch(e){return{ok:false,error:'Invalid JSON: '+text.substring(0,100)};}
+    catch(e){return{ok:false,error:'Invalid JSON: '+text.substring(0,200)};}
   }catch(err){
+    console.error('callGAS error:',err);
     return{ok:false,error:err.message};
   }
 }
