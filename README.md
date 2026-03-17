@@ -1,0 +1,2 @@
+# magazLuisaAI
+gestione lavoro
