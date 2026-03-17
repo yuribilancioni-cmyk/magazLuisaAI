@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "/gas/*"
+  to = "https://script.google.com/macros/s/AKfycbw2hXGUfOsOWfVwXrNnEIR8RE4B22ZO33nrSeV64AtEQsS-EphJ7gaQAQyDW4jzkj3L/exec/:splat"
+  status = 200
+  force = true
+  [redirects.headers]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
