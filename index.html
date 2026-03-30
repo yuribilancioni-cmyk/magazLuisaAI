@@ -2657,11 +2657,16 @@ function renderWarehouse(){
             <div class="wh-batch-name">${esc(ln?ln.name:'')}</div>
             <div class="wh-batch-variant">${esc(p.variant_name||'')} · ${b.depth||''}</div>
           </div>
-          <div style="text-align:right;margin-right:8px">
-            <div class="wh-batch-qty">${b.quantity}</div>
+          <div style="text-align:right;margin-right:4px">
+            <input type="number" min="0" value="${b.quantity}" 
+              onchange="editBatchQty(${b.id},this.value)"
+              style="width:56px;text-align:center;font-family:var(--mono);font-size:15px;font-weight:700;background:var(--bg3);border:1.5px solid var(--border2);border-radius:6px;padding:4px 6px;outline:none">
             ${es?`<div class="wh-batch-exp">${es}</div>`:''}
           </div>
-          <button onclick="moveBatch(${b.id})" style="background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);white-space:nowrap;flex-shrink:0">Sposta</button>
+          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+            <button onclick="moveBatch(${b.id})" style="background:var(--accent-light);color:var(--accent);border:none;border-radius:6px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)">Sposta</button>
+            <button onclick="deleteBatch(${b.id})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)">✕ Elimina</button>
+          </div>
         </div>`;
       }).join('');
       return`<div class="wh-row-group"><div class="wh-row-label">fila ${row}</div>${ih}</div>`;
@@ -2675,6 +2680,23 @@ function renderWarehouse(){
   }).join('');
 }
 function tglPal(id){const e=document.getElementById(id);if(e)e.style.display=e.style.display==='none'?'':' none';}
+
+function editBatchQty(batchId, val) {
+  const b = STATE.batches.find(x=>x.id==batchId);
+  if(!b) return;
+  b.quantity = Math.max(0, +val||0);
+  saveLocal();
+  syncBatchesToSheets();
+  renderWarehouse();
+}
+
+function deleteBatch(batchId) {
+  if(!confirm('Eliminare questo lotto?')) return;
+  STATE.batches = STATE.batches.filter(x=>x.id!=batchId);
+  saveLocal();
+  syncBatchesToSheets();
+  renderWarehouse();
+}
 
 let SISTEMA_STATE={batchId:null,lineId:null,items:{},depth:'davanti'};
 
