@@ -3239,7 +3239,7 @@ function renderAdminPhotos() {
           </div>
         </div>
         <div style="display:flex;gap:6px;align-items:center">
-          <a href="${googleUrl}" target="_blank"
+          <a href="https://www.google.com/search?tbm=isch&q=${searchQuery}" target="_blank"
             style="background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;text-decoration:none;color:var(--text2);flex-shrink:0">🔍</a>
           <input type="text" id="photo-${p.id}" value="${esc(p.photo||'')}" placeholder="Incolla URL immagine..."
             style="flex:1;padding:7px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--bg3);font-size:12px;outline:none;color:var(--text)">
